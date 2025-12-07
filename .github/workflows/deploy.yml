@@ -36,7 +36,6 @@ jobs:
           cd DendriticPromptLibraryBook
           jupyter book clean DendriticPromptLibraryBook --all || true
           jupyter book build DendriticPromptLibraryBook
-          ls -R DendriticPromptLibraryBook/_build/html
           
       - name: Deploy to GitHub Pages
         run: |
