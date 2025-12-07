@@ -33,6 +33,7 @@ jobs:
 
       - name: Build Jupyter Book
         run: |
+          cd DendriticPromptLibraryBook
           jupyter book clean DendriticPromptLibraryBook --all || true
           jupyter book start DendriticPromptLibraryBook
           ls -R DendriticPromptLibraryBook/_build/html
