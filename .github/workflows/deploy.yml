@@ -1,0 +1,42 @@
+name: Deploy Jupyter Book to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Clean previous builds
+        run: |
+          jupyter-book clean DendriticPromptLibraryBook --all || true
+          
+      - name: List book files
+        run: |
+          ls -R DendriticPromptLibraryBook
+
+      - name: Build Jupyter Book
+        run: |
+          jupyter-book clean DendriticPromptLibraryBook --all || true
+          jupyter-book build DendriticPromptLibraryBook
+          ls -R DendriticPromptLibraryBook/_build/html
+          
+      - name: Deploy to GitHub Pages
+        run: |
+          ghp-import -n -p -f DendriticPromptLibraryBook/_build/html
