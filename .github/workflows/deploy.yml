@@ -25,7 +25,7 @@ jobs:
 
       - name: Clean previous builds
         run: |
-          jupyter-book clean DendriticPromptLibraryBook --all || true
+          jupyter book clean DendriticPromptLibraryBook --all || true
           
       - name: List book files
         run: |
@@ -33,8 +33,8 @@ jobs:
 
       - name: Build Jupyter Book
         run: |
-          jupyter-book clean DendriticPromptLibraryBook --all || true
-          jupyter-book build DendriticPromptLibraryBook
+          jupyter book clean DendriticPromptLibraryBook --all || true
+          jupyter book start DendriticPromptLibraryBook
           ls -R DendriticPromptLibraryBook/_build/html
           
       - name: Deploy to GitHub Pages
