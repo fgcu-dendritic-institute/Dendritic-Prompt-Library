@@ -5,47 +5,38 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: 'pages'
-  cancel-in-progress: false
-
 jobs:
   build-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          node-version: '18'
+          python-version: "3.11"
 
-      - name: Install MyST
-        run: npm install -g mystmd
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Build with MyST
+      - name: Clean previous builds
+        run: |
+          jupyter book clean DendriticPromptLibraryBook --all || true
+          
+      - name: List book files
+        run: |
+          ls -R DendriticPromptLibraryBook
+
+      - name: Build Jupyter Book
         run: |
           cd DendriticPromptLibraryBook
-          myst build --html
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: 'DendriticPromptLibraryBook/_build/html'
-
+          jupyter book clean DendriticPromptLibraryBook --all || true
+          jupyter book build DendriticPromptLibraryBook
+          
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        run: |
+          ghp-import -n -p -f DendriticPromptLibraryBook
